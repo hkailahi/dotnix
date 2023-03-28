@@ -1,17 +1,24 @@
 {
-  description = "Heneli's darwin system";
+  description = "Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-21.11-darwin";
-    darwin.url = "github:lnl7/nix-darwin/master";
-    # darwin.url = "path:/Users/hkailahi/dev/git/forks/nix-darwin";  # local fork with flakeFlags removed
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-  };
-
-  outputs = { self, darwin, nixpkgs }: {
-    darwinConfigurations."Henelis-MacBook-Pro-2" = darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
-      modules = [ ./configuration.nix ];
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
+  outputs = { nixpkgs, home-manager, ... }: let
+    arch = "x86_64-darwin";
+  in {
+    defaultPackage.${arch} =
+      home-manager.defaultPackage.${arch};
+
+    homeConfigurations.Henelis-MBP-2 =
+      home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${arch};
+        modules = [ ./home.nix ];
+      };
+    };
 }

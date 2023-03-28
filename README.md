@@ -45,3 +45,18 @@ $ mv darwin-configuration.nix configuration.nix
 $ nix build ~/.config/darwin\#darwinConfigurations.Henelis-MacBook-Pro-2.system
 $ ./result/sw/bin/darwin-rebuild switch --flake ~/.config/darwin
 ```
+
+## Give up
+
+- nix-darwin was (prob? somehow?) reverting my nix installation (2.13.x -> 2.3.x) and this was causing issues with flake flags.
+- detsys installer setup /etc/nix/nix.conf, which nix-darwin took issue with since it wants to control (nix.settings opt)
+- <darwin> nix-channel permission issues when setting up (restart might have fixed it)
+- after messing with it have `darwin-rebuild` command but running on configuration.nix isn't setting up `bat` anymore. Env issue?
+
+-----------------------------------------
+
+Attempt #2: Follow https://juliu.is/tidying-your-home-with-nix/
+
+Using `~/.config/dotnix` instead of `~/.config/nixpkgs`
+
+
