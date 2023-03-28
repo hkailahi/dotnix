@@ -59,4 +59,19 @@ Attempt #2: Follow https://juliu.is/tidying-your-home-with-nix/
 
 Using `~/.config/dotnix` instead of `~/.config/nixpkgs`
 
+* Setup up flake.nix and home.nix
+
+* Run `nix run .#homeConfigurations.hkailahi.activationPackage` to install home-manager and setup first configuration
+
+After this, `home-manager switch --flake .#hkailahi` can be run to switch home profile (aka rebuild home env via flake.nix and home.nix)
+- This is just a shorthand for above `nix run .#homeConf....`
+
+NOTE: The `.` in `.#hkailahi` is the <flake-uri>. Since I'm running from `dotnix` repo, `.` works, otherwise `~/.config/dotnix` or similar prob
+
+Per https://nix-community.github.io/home-manager/index.html#ch-nix-flakes
+> The flake inputs are not upgraded automatically when switching. The analogy to the command home-manager --update ... is nix flake update.
+>
+> If updating more than one input is undesirable, the command nix flake lock --update-input <input-name> can be used.
+>
+> You can also pass flake-related options such as --recreate-lock-file or --update-input [input] to home-manager when building/switching, and these options will be forwarded to nix build. See the NixOS Wiki page for detail.
 

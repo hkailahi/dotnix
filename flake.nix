@@ -15,7 +15,7 @@
     defaultPackage.${arch} =
       home-manager.defaultPackage.${arch};
 
-    homeConfigurations.Henelis-MBP-2 =
+    homeConfigurations.hkailahi =
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${arch};
         modules = [ ./home.nix ];
