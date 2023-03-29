@@ -30,7 +30,36 @@
   programs.bash = {
     enable = true;
     profileExtra = builtins.readFile ./bash_profile;
-    # initExtra = builtins.readFile ./bashrc;
+    initExtra = builtins.readFile ./bashrc;
+
+    ## Per https://github.com/nix-community/home-manager/issues/3133#issuecomment-1320315536
+    # turn off the automated completion injection
+      enableCompletion = false;
+      # manually import completions using `-z` to check if it's been loaded instead of `-v`
+      bashrcExtra = ''
+        if [[ -z BASH_COMPLETION_VERSINFO ]]; then
+          . "${pkgs.bash-completion}/etc/profile.d/bash_completion.sh"
+        fi
+      '';
+
+    ## Per https://github.com/nix-community/home-manager/blob/bb4b25b302dbf0f527f190461b080b5262871756/modules/programs/bash.nix#L86
+    # Modify default option set to remove macOS-incompatible options
+    shellOptions = [
+      
+      # Append to history file rather than replacing it.
+          "histappend"
+
+          # check the window size after each command and, if
+          # necessary, update the values of LINES and COLUMNS.
+          "checkwinsize"
+
+          # Extended globbing.
+          "extglob"
+          # "globstar"  # unavailable on macOS
+
+          # Warn if closing shell with running jobs.
+          # "checkjobs"  # unavailable on macOS
+    ];
   };
 
   programs.direnv.enable = true;
