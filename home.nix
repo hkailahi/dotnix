@@ -39,6 +39,15 @@
     nix-direnv.enable = true;
   };
 
+  programs.exa = {
+    enable = true;
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = true;
+  };
+
   programs.git = {
     enable = true;
     includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
@@ -101,5 +110,10 @@
         sha256 = "sha256-Yqn59ppNWQRMWGYVLLWofogds+4t/WRRtSSfomPWQy4=";
       }
     ];
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableBashIntegration = true;
   };
 }
