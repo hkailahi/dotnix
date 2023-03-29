@@ -9,6 +9,9 @@
   ];
   
   home.packages = with pkgs; [
+    # Shell
+    pkgs.bashInteractive
+    
     # CLI Programs
     bat
     delta
@@ -24,12 +27,21 @@
   ];
 
   ##### Home-Manager Program Options ###############################################################
+  programs.bash = {
+    enable = true;
+    profileExtra = builtins.readFile ./bash_profile;
+    # initExtra = builtins.readFile ./bashrc;
+  };
+
   programs.direnv.enable = true;
   programs.direnv = {
     enableBashIntegration = true;
     nix-direnv.enable = true;
-    # config = {};
-    # stdlib = "";
+  };
+
+  programs.git = {
+    enable = true;
+    includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
   };
 
   programs.jq.enable = true;
