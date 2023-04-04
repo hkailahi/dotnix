@@ -4,6 +4,12 @@
   home.stateVersion = "22.11";
   programs.home-manager.enable = true;
 
+  home.sessionVariables = {
+    EDITOR = "code";
+    # Just keep copy of ./etc-nix files in .config/nix since nix.settings and nix.extraOptions refuse to work
+    NIX_CONF_DIR = "$HOME/.config/nix";
+  };
+  
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "vscode"
   ];
