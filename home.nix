@@ -131,11 +131,25 @@
         sha256 = "sha256-eaiR30HjPCpOLUKQqiQ2Oqj+XY+JNnV47bM5KD2Mouk=";
       }
       {
+        # Adds language support for MDX.
+        name = "prettier-vscode";
+        publisher = "esbenp";
+        version = "9.10.4";
+        sha256 = "sha256-khtyB0Qbm+iuM1GsAaF32YRv1VBTIy7daeCKdgwCIC8=";
+      }
+      {
         # Run python doctests inline like HLS
         name = "python-inline-repl";
         publisher = "zijie";
         version = "0.0.1";
         sha256 = "sha256-rn/ZR5OgDaxAGB+Q0FJ3Vx1VIAVosoZq1A5z+hptiI0=";
+      }
+      {
+        # Adds language support for MDX.
+        name = "vscode-mdx";
+        publisher = "unifiedjs";
+        version = "1.3.0";
+        sha256 = "sha256-TfqSU9V5vG7GwxEihUdEGC19VFHEUjlrTg+XXHdOYn4=";
       }
       {
         # Access documentation with Zeal (linux kapeli/Dash.app alternetive)
