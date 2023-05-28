@@ -1,63 +1,59 @@
 # dotnix
 
-## Steps
+Personal system configuration used on my 2019 Intel Macbook Pro.
 
-* Install nix
-(Needed to boostrap initial configuration) per https://github.com/LnL7/nix-darwin#install
-```bash
-$ nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-$ ./result/bin/darwin-installer
-```
+- [dotnix](#dotnix)
+  - [Understanding `.dotnix`](#understanding-dotnix)
+  - [Installation `.dotnix`](#installation-dotnix)
+  - [How I Started](#how-i-started)
 
-* Initialize with minimal config flake
+## Understanding `.dotnix`
 
-Per https://github.com/LnL7/nix-darwin#flakes-experimental
+| File | Purpose | Notes |
+|------|---------|-------|
+| `home.nix` | My system configuration via [`home-manager`](https://github.com/nix-community/home-manager) including: <br />- apps (ex. 1Password, Firefox, VSCode)<br />- global dev settings (ex. git config, bash profile, editor settings)<br />- CLI tools (ex. `bat`, `fzf`, `jq`)<br />...and more | [Home-Manager Manual](https://nix-community.github.io/home-manager/index.html) - Tool for system configuration, dotfiles, etc via Nix <br />- [Home-Manager Options](https://nix-community.github.io/home-manager/options.html)<br />- [Home-Manager Options](https://mipmip.github.io/home-manager-option-search/) and [Options Search](https://nix-community.github.io/home-manager/options.html)<br />- [NixPkgs Search](https://search.nixos.org/packages)<br />- <br />- |
+| `flake.nix` | | |
+| `flake.lock` | | |
+| `bin/apply-system.sh` | | |
+| `bin/update-system.sh` | | |
+| `etc-nix/*` | | |
 
-Replace "Henelis-MacBook-Pro-2" with result of `hostname | cut -f 1 -d .`
-```nix:configuration.nix
-{
-  description = "Heneli's darwin system";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-22.11-darwin";
-    darwin.url = "github:lnl7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-  };
+## Installation `.dotnix`
 
-  outputs = { self, darwin, nixpkgs }: {
-    darwinConfigurations."Henelis-MacBook-Pro-2" = darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
-      modules = [ ./configuration.nix ];
-    };
-  };
-}
-``` 
+1. Install `nix`
 
-Run following to bootstrap system
+Follow the [Zero-to-Nix Quickstart Guide](https://zero-to-nix.com/start/install) for a flake-based nix installation.
 
-```
-# Get a default configuration.nix in repo
-$ cp ~/.nixpkgs/darwin-configuration.nix ~/.config/dotnix
-$ mv darwin-configuration.nix configuration.nix
-```
+2. Setup repo
 
 ```bash
-$ nix build ~/.config/darwin\#darwinConfigurations.Henelis-MacBook-Pro-2.system
-$ ./result/sw/bin/darwin-rebuild switch --flake ~/.config/darwin
+$ mkdir -p ~/.config
+$ cd ~/.config
+$ git clone git@github.com:hkailahi/dotnix.git
 ```
 
-## Give up
+3. Apply system configurations
 
-- nix-darwin was (prob? somehow?) reverting my nix installation (2.13.x -> 2.3.x) and this was causing issues with flake flags.
-- detsys installer setup /etc/nix/nix.conf, which nix-darwin took issue with since it wants to control (nix.settings opt)
-- <darwin> nix-channel permission issues when setting up (restart might have fixed it)
-- after messing with it have `darwin-rebuild` command but running on configuration.nix isn't setting up `bat` anymore. Env issue?
+```bash
+$ cd ~/.config/dotnix/
+$ ./bin/update-system.sh
+```
 
------------------------------------------
+## How I Started
 
-Attempt #2: Follow https://juliu.is/tidying-your-home-with-nix/
+This is the path I took for developing this repo following https://julomeiu.is/tidying-your-home-with-nix/.
 
+1. Install `nix`
+
+Follow the [Zero-to-Nix Quickstart Guide](https://zero-to-nix.com/start/install) for a flake-compatible nix installation
+
+2. Configure repo
 Using `~/.config/dotnix` instead of `~/.config/nixpkgs`
+
+```bash
+$ mkdir -p ~/.config/dotnix
+```
 
 * Setup up flake.nix and home.nix
 

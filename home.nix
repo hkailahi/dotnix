@@ -36,6 +36,7 @@
     haskellPackages.nix-derivation
     nil  # https://github.com/oxalica/nil#readme
     nix-direnv
+    nix-info
     nix-tree
     nixpkgs-fmt
   ];
