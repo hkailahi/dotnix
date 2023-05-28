@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
   home.username = "hkailahi";
   home.homeDirectory = "/Users/hkailahi";
   home.stateVersion = "22.11";
@@ -9,15 +10,22 @@
     # Just keep copy of ./etc-nix files in .config/nix since nix.settings and nix.extraOptions refuse to work
     NIX_CONF_DIR = "$HOME/.config/nix";
   };
-  
+
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "vscode"
   ];
-  
+
   home.packages = with pkgs; [
+    # Languages
+    python311
+
+    # Infra
+    podman
+    qemu
+
     # Shell
-    pkgs.bashInteractive
-    
+    bashInteractive
+
     # CLI Programs
     bat
     delta
@@ -26,10 +34,10 @@
 
     # Nix-specific Tools
     haskellPackages.nix-derivation
+    nil  # https://github.com/oxalica/nil#readme
     nix-direnv
     nix-tree
     nixpkgs-fmt
-    rnix-lsp
   ];
 
   ##### Home-Manager Program Options ###############################################################
@@ -51,7 +59,7 @@
     ## Per https://github.com/nix-community/home-manager/blob/bb4b25b302dbf0f527f190461b080b5262871756/modules/programs/bash.nix#L86
     # Modify default option set to remove macOS-incompatible options
     shellOptions = [
-      
+
       # Append to history file rather than replacing it.
           "histappend"
 
@@ -90,6 +98,26 @@
 
   programs.jq.enable = true;
 
+  # Settings adapted from https://github.com/the-argus/nixsys/blob/74ee1dd0ac503e241581ee8c3d7b719fa4305e1e/user/primary/lf.nix#L46
+  programs.lf = {
+    enable = true;
+    settings = {
+      drawbox = true;
+      dirfirst = true;
+      icons = true;
+      ignorecase = true;
+      preview = true;
+      # shell = "${pkgs.dash}/bin/dash";
+      # shellopts = "-eu";
+      # tabstop = 2;
+      # info = "size";
+    };
+    # previewer = {
+    #   source = sandbox;
+    #   keybinding = "i";
+    # };
+  };
+
   programs.nix-index.enable = true;
   programs.nix-index = {
     enableBashIntegration = true;
@@ -102,6 +130,42 @@
 
   programs.vscode = {
     enable = true;
+    enableUpdateCheck = false;
+
+    userSettings = {
+      "editor" = {
+        "fontSize" = 18;
+        "formatOnPaste" = true;
+        "tabSize" = 2;
+        "rulers" = [ 100 ];
+      };
+      "files.trimTrailingWhitespace" = true;
+      "markdown.preview.doubleClickToSwitchToEditor" = false;
+      "markdown.preview.openMarkdownLinks" = "inEditor";
+      "[markdown]" = {
+        "editor.unicodeHighlight.allowedCharacters" = {
+          "’" = true;
+        };
+        "editor.wordWrap" = "on";
+      };
+      "[nix]" = {
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+      };
+      "nix.enableLanguageServer" = true;  # Enable LSP.
+      "nix.serverPath" = "nil";
+      "nix.serverSettings" = {
+        "nil" = {
+          # "diagnostics" = {
+          #   "ignored" = [ "unused_binding" "unused_with" ];
+          # };
+          "formatting" = {
+            "command" = ["nixpkgs-fmt"];
+          };
+        };
+      };
+      "window.titleBarStyle" = "native";
+    };
+
     extensions = with pkgs.vscode-extensions; [
       # Nix
       bbenoist.nix
