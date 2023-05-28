@@ -3,15 +3,15 @@
 Personal system configuration used on my 2019 Intel Macbook Pro.
 
 - [dotnix](#dotnix)
-  - [Understanding `.dotnix`](#understanding-dotnix)
+  - [Understanding `dotnix`](#understanding-dotnix)
   - [Installation `.dotnix`](#installation-dotnix)
   - [How I Started](#how-i-started)
 
-## Understanding `.dotnix`
+## Understanding `dotnix`
 
 | File | Purpose | Notes |
 |------|---------|-------|
-| `home.nix` | My system configuration via [`home-manager`](https://github.com/nix-community/home-manager) including: <br />- apps (ex. 1Password, Firefox, VSCode)<br />- global dev settings (ex. git config, bash profile, editor settings)<br />- CLI tools (ex. `bat`, `fzf`, `jq`)<br />...and more | [Home-Manager Manual](https://nix-community.github.io/home-manager/index.html) - Tool for system configuration, dotfiles, etc via Nix <br />- [Home-Manager Options](https://nix-community.github.io/home-manager/options.html)<br />- [Home-Manager Options](https://mipmip.github.io/home-manager-option-search/) and [Options Search](https://nix-community.github.io/home-manager/options.html)<br />- [NixPkgs Search](https://search.nixos.org/packages)<br />- <br />- |
+| `home.nix` | My system configuration via [`home-manager`](https://github.com/nix-community/home-manager) including: <br />• apps (1Password, Firefox, VSCode)<br />• dev settings (`.git`, `.bashrc`)<br />• CLI tools (`bat`, `fzf`, `jq`)<br />...and more |• [Home-Manager Manual](https://nix-community.github.io/home-manager/index.html) - tool for declaratively managing system configuration, dotfiles, etc<br />• [Home-Manager Options](https://nix-community.github.io/home-manager/options.html) & [Options Search](https://mipmip.github.io/home-manager-option-search/) - pre-defined configurations available with `home-manager`<br />• [NixPkgs](https://search.nixos.org/packages) - package repository + binary cache with 100k+ available packages |
 | `flake.nix` | | |
 | `flake.lock` | | |
 | `bin/apply-system.sh` | | |
@@ -23,9 +23,9 @@ Personal system configuration used on my 2019 Intel Macbook Pro.
 
 1. Install `nix`
 
-Follow the [Zero-to-Nix Quickstart Guide](https://zero-to-nix.com/start/install) for a flake-based nix installation.
+Follow the [Zero-to-Nix Quickstart Guide](https://zero-to-nix.com/start/install) for a flake-based `nix` installation.
 
-2. Setup repo
+2. Setup `dotnix` repo
 
 ```bash
 $ mkdir -p ~/.config
