@@ -1,12 +1,25 @@
 # dotnix
 
-Personal system configuration used on my 2019 Intel Macbook Pro.
+Declarative system configuration used on my 2019 Intel Macbook Pro.
 
 - [dotnix](#dotnix)
+  - [Understanding System Configuration with Nix](#understanding-system-configuration-with-nix)
   - [Understanding `dotnix`](#understanding-dotnix)
   - [Contents](#contents)
   - [Installation](#installation)
   - [How I Started](#how-i-started)
+
+## Understanding System Configuration with Nix
+
+NixOS allows users to define the entire system configuration in a declarative manner using the Nix expression language. This includes specifying packages, services, users, and other system settings. The declarative nature of NixOS ensures that the system configuration is version-controlled, reproducible, and easy to share. It also simplifies system administration by providing a single source of truth for the entire system state.
+
+Outside of NixOS, declarative system configuration can be achieved on MacOS through various Nix-based tools like `home-manager` and `nix-darwin`. The following tools work with both standard and `flake`-based approaches:
+
+| System Configuration | Platforms | Configuration File | Configuration Options | Notes |
+|------|---------|-------|-------|-------|
+| [NixOS](https://nixos.org/manual/nix/stable/) | NixOS | `configuration.nix` | Available in [Manual](https://nixos.org/manual/nixos/stable/options.html) or [NixOS Options Search](https://search.nixos.org/options) | |
+| [Home-Manager](https://nix-community.github.io/home-manager/) | NixOS, Linux, MacOS | `home.nix` | [`accounts`, `home`, `launchd`, `nix`, `programs`, `services`, `systemd`, `targets.darwin`, `wayland`, `xdg`, `xsession`](https://mipmip.github.io/home-manager-option-search/) | Can also be configured as [NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module) or [`nix-darwin` module](https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module) |
+| [Nix-Darwin](https://daiderd.com/nix-darwin/) | MacOS | `darwin-configuration.nix` | [`enviroment`, `homebrew`, `launchd`, `networking`, `nix`, `programs`, `services`, `system`, `users`](https://daiderd.com/nix-darwin/manual/index.html#sec-options)  |
 
 ## Understanding `dotnix`
 
@@ -17,7 +30,6 @@ Personal system configuration used on my 2019 Intel Macbook Pro.
 | `flake.lock` | Pins dependencies used in flake inputs | |
 | `bin/apply-system.sh` | Script to apply system configuration | Simple `home-manager switch...` invocation |
 | `bin/update-system.sh` | Script to update dependencies | Simple `nix flake update` invocation |
-| `etc-nix/*` | Deprecated | |
 
 
 ## Contents
