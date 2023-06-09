@@ -4,7 +4,8 @@ Personal system configuration used on my 2019 Intel Macbook Pro.
 
 - [dotnix](#dotnix)
   - [Understanding `dotnix`](#understanding-dotnix)
-  - [Installation `.dotnix`](#installation-dotnix)
+  - [Contents](#contents)
+  - [Installation](#installation)
   - [How I Started](#how-i-started)
 
 ## Understanding `dotnix`
@@ -12,14 +13,38 @@ Personal system configuration used on my 2019 Intel Macbook Pro.
 | File | Purpose | Notes |
 |------|---------|-------|
 | `home.nix` | My system configuration via [`home-manager`](https://github.com/nix-community/home-manager) including: <br />• apps (1Password, Firefox, VSCode)<br />• dev settings (`.git`, `.bashrc`)<br />• CLI tools (`bat`, `fzf`, `jq`)<br />...and more |• [Home-Manager Manual](https://nix-community.github.io/home-manager/index.html) - tool for declaratively managing system configuration, dotfiles, etc<br />• [Home-Manager Options](https://nix-community.github.io/home-manager/options.html) & [Options Search](https://mipmip.github.io/home-manager-option-search/) - pre-defined configurations available with `home-manager`<br />• [NixPkgs](https://search.nixos.org/packages) - package repository + binary cache with 100k+ available packages |
-| `flake.nix` | | |
-| `flake.lock` | | |
-| `bin/apply-system.sh` | | |
-| `bin/update-system.sh` | | |
-| `etc-nix/*` | | |
+| `flake.nix` | Takes Nix expressions as input, then output things like package definitions, development environments, or, as is the case here, system configurations.<br /><br />For this specific repository, we can think of it as wrapping `home.nix` in order to provide it pinned dependencies and manage the outputs. | • [Zero to Nix Glossary](https://zero-to-nix.com/concepts/flakes)<br />• [xeiaso's Nix Flake Guides](https://xeiaso.net/blog/series/nix-flakes) |
+| `flake.lock` | Pins dependencies used in flake inputs | |
+| `bin/apply-system.sh` | Script to apply system configuration | Simple `home-manager switch...` invocation |
+| `bin/update-system.sh` | Script to update dependencies | Simple `nix flake update` invocation |
+| `etc-nix/*` | Deprecated | |
 
 
-## Installation `.dotnix`
+## Contents
+
+Software installed with `dotnix` is specified in following ways:
+  - [Home-Manager Options](https://mipmip.github.io/home-manager-option-search/)
+    - Via `programs.*` in `home.nix`
+  - [Nixpkgs](https://search.nixos.org/packages) Package Set
+    - Via `home.packages` in `home.nix`, corresponding to `nixpkgs` release at `flake.nix:inputs.nixpkgs.url`
+  - [Flake Inputs](https://zero-to-nix.com/concepts/flakes#inputs)
+    - Via `inputs` in `flake.nix` and pinned in `flake.lock`
+
+System-wide `nix` settings are specified in `home.nix` under the following declarations:
+  - `nix.package`
+    - Determines which version of `nix` is used
+      - Has matching declaration under `home.packages.config.nix.package`
+  - `home.sessionVariables`
+    - Environment variables set at login
+  - `nix.settings`
+    - Replaces configuration that's usually found at `/etc/nix/nix.conf`
+    - Sets feature flags, binary cache keys and locations, etc
+  - `nix.registry`
+    - Replaces configuration that's usually found at `/etc/nix/registry.json`
+    - Same as default found at https://github.com/NixOS/flake-registry
+      - > "The flake registry serves as a convenient method for the Nix CLI to associate short names with flake URIs, such as linking `nixpkgs` to `github:NixOS/nixpkgs/nixpkgs-unstable.`"
+
+## Installation
 
 1. Install `nix`
 
