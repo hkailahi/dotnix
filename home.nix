@@ -75,6 +75,7 @@
 
     # Languages
     python311
+    haskell.compiler.ghc96
 
     # Infra
     podman
