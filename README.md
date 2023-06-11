@@ -1,15 +1,32 @@
 # dotnix
 
 Declarative system configuration used on my 2019 Intel Macbook Pro.
+```bash
+$ nix-info -m && date
+ - system: `"x86_64-darwin"`
+ - host os: `Darwin 22.5.0, macOS 10.16`
+ - multi-user?: `yes`
+ - sandbox: `no`
+ - version: `nix-env (Nix) 2.15.1`
+ - nixpkgs: `/nix/store/jlbslziyjj8clk62y4pr7fc23amm5npp-source`
+
+Sat Jun 10 21:15:00 PDT 2023
+```
 
 - [dotnix](#dotnix)
-  - [Understanding System Configuration with Nix](#understanding-system-configuration-with-nix)
-  - [Understanding `dotnix`](#understanding-dotnix)
-  - [Contents](#contents)
-  - [Installation](#installation)
-  - [How I Started](#how-i-started)
+  - [Learn](#learn)
+    - [System Configuration with Nix](#system-configuration-with-nix)
+    - [Understanding `dotnix`](#understanding-dotnix)
+  - [Do](#do)
+    - [Installation](#installation)
+    - [Modifying the System Configuration](#modifying-the-system-configuration)
+    - [Updating the System Configuration](#updating-the-system-configuration)
+  - [Learn and Do](#learn-and-do)
+    - [How I Started](#how-i-started)
 
-## Understanding System Configuration with Nix
+## Learn
+
+### System Configuration with Nix
 
 NixOS allows users to define the entire system configuration in a declarative manner using the Nix expression language. This includes specifying packages, services, users, and other system settings. The declarative nature of NixOS ensures that the system configuration is version-controlled, reproducible, and easy to share. It also simplifies system administration by providing a single source of truth for the entire system state.
 
@@ -21,7 +38,7 @@ Outside of NixOS, declarative system configuration can be achieved on MacOS thro
 | [Home-Manager](https://nix-community.github.io/home-manager/) | NixOS, Linux, MacOS | `home.nix` | [`accounts`, `home`, `launchd`, `nix`, `programs`, `services`, `systemd`, `targets.darwin`, `wayland`, `xdg`, `xsession`](https://mipmip.github.io/home-manager-option-search/) | Can also be configured as [NixOS module](https://nix-community.github.io/home-manager/index.html#sec-install-nixos-module) or [`nix-darwin` module](https://nix-community.github.io/home-manager/index.html#sec-install-nix-darwin-module) |
 | [Nix-Darwin](https://daiderd.com/nix-darwin/) | MacOS | `darwin-configuration.nix` | [`enviroment`, `homebrew`, `launchd`, `networking`, `nix`, `programs`, `services`, `system`, `users`](https://daiderd.com/nix-darwin/manual/index.html#sec-options)  |
 
-## Understanding `dotnix`
+### Understanding `dotnix`
 
 | File | Purpose | Notes |
 |------|---------|-------|
@@ -31,8 +48,7 @@ Outside of NixOS, declarative system configuration can be achieved on MacOS thro
 | `bin/apply-system.sh` | Script to apply system configuration | Simple `home-manager switch...` invocation |
 | `bin/update-system.sh` | Script to update dependencies | Simple `nix flake update` invocation |
 
-
-## Contents
+---
 
 Software installed with `dotnix` is specified in following ways:
   - [Home-Manager Options](https://mipmip.github.io/home-manager-option-search/)
@@ -56,7 +72,9 @@ System-wide `nix` settings are specified in `home.nix` under the following decla
     - Same as default found at https://github.com/NixOS/flake-registry
       - > "The flake registry serves as a convenient method for the Nix CLI to associate short names with flake URIs, such as linking `nixpkgs` to `github:NixOS/nixpkgs/nixpkgs-unstable.`"
 
-## Installation
+## Do
+
+### Installation
 
 1. Install `nix`
 
@@ -74,10 +92,42 @@ $ git clone git@github.com:hkailahi/dotnix.git
 
 ```bash
 $ cd ~/.config/dotnix/
+$ ./bin/apply-system.sh
+```
+
+### Modifying the System Configuration
+
+1. Modify configuration files
+
+For example, add a new package to install in `home.nix` or move to a newer release of `nixpkgs` in `flake.nix`.
+
+2. Apply system configurations
+
+```bash
+$ cd ~/.config/dotnix/
+$ ./bin/apply-system.sh
+```
+
+
+### Updating the System Configuration
+
+1. Update dependencies in `flake.lock`
+
+```bash
+$ cd ~/.config/dotnix/
 $ ./bin/update-system.sh
 ```
 
-## How I Started
+2. Apply system configurations
+
+```bash
+$ cd ~/.config/dotnix/
+$ ./bin/apply-system.sh
+```
+
+## Learn and Do
+
+### How I Started
 
 This is the path I took for developing this repo following https://julomeiu.is/tidying-your-home-with-nix/.
 
