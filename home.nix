@@ -89,6 +89,7 @@
     delta
     tldr
     tree
+    visidata
 
     # Nix-specific Tools
     haskellPackages.nix-derivation
@@ -97,6 +98,8 @@
     nix-info
     nix-tree
     nixpkgs-fmt
+    sbomnix
+    vulnix
   ];
 
   ##### Home-Manager Program Options ###############################################################
