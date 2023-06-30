@@ -20,24 +20,19 @@
       - [Validate Identical dev/prod Environments](#validate-identical-devprod-environments)
       - [Managed Environments](#managed-environments-1)
       - [Language Guides: Python](#language-guides-python)
-    - [Concepts](#concepts)
-      - [https://floxdev.com/docs/concepts/catalog/](#httpsfloxdevcomdocsconceptscatalog)
-      - [https://floxdev.com/docs/concepts/environments/](#httpsfloxdevcomdocsconceptsenvironments)
-      - [https://floxdev.com/docs/concepts/flox-plus-nix/](#httpsfloxdevcomdocsconceptsflox-plus-nix)
-      - [https://floxdev.com/docs/concepts/generations/](#httpsfloxdevcomdocsconceptsgenerations)
-      - [https://floxdev.com/docs/concepts/package-arguments/](#httpsfloxdevcomdocsconceptspackage-arguments)
-      - [https://floxdev.com/docs/concepts/stabilities/](#httpsfloxdevcomdocsconceptsstabilities)
   - [Uninstall flox](#uninstall-flox)
 
 ## Main Takeaways and Feedback
 
-I'd feel comfortable recommending `flox` to friends looking to get into Nix. While I'd have to evaluate it further before recommending it be used on one of my teams or for professionals, I'm be willing to do so. I'm already a fan of Nix, and any tool that would let me use it professionally without needing a *Nix Expert™️* on the team is compelling.
+I'd feel comfortable recommending `flox` to colleagues looking to get into Nix. While I'd have to evaluate it further before recommending use on a team project, I think it would be worth taking that look. I'm already a fan of Nix, and any tool that would let me use it professionally without needing a *Nix Expert™️* on the team is compelling.
 
 Things I'd want to know:
 - How does `flox` hold up when you stray from the happy path?
+  - Ex. Non-actionable `--show-trace` CLI suggestion on failure
 - What's the business model? Does it seem sustainable? What does the enterprise plan offer?
+- Are there examples of teams using `flox` in production?
 
-The docs seem excellent.
+The beta docs are pretty good but there are some bits that didn't work for me. I got through the installation and a couple tutorials before running out of steam. The cookbooks and concepts seemed solid from my quick skim. I regret jumping straight into the Docs page before reading the Product page since that would have better motivated the examples.
 
 ## Experience Report
 
@@ -1075,7 +1070,7 @@ Run make to build this project
 ```
 </details>
 
-Looks good.
+Looks good. The tutorial made sense and covers the primary use case I'd want.
 
 Suggestions:
 - (Moderate) Add `git init` to documented steps and point out why its necessary
@@ -1088,15 +1083,115 @@ Suggestions:
 
 #### [Managed Environments](https://floxdev.com/docs/tutorials/managed-environments/)
 
+<details>
+
+```bash
+$ flox create -e managed-env
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+created environment managed-env (x86_64-darwin)
+
+$ flox subscribe flox-examples github:flox-examples/floxpkgs/master
+warning: input 'nixpkgs' has an override for a non-existent input 'floxpkgs'
+warning: input 'nixpkgs/flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+subscribed channel 'flox-examples'
+
+$ flox install -e managed-env flox-examples.demo-dnd-server caddy procps curl jq
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+warning: input 'nixpkgs' has an override for a non-existent input 'floxpkgs'
+warning: input 'nixpkgs/flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'nixpkgs' has an override for a non-existent input 'floxpkgs'
+warning: input 'nixpkgs/flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+error: path '/nix/store/gb3ci5v66qvkr1rahj3nax0zbckl8r1l-demo-dnd-server-0.0.0' does not exist and cannot be created
+(use '--show-trace' to show detailed location information)
+
+ERROR: failed to install packages: flake:flox-examples#evalCatalog.x86_64-darwin.stable.demo-dnd-server flake:nixpkgs-flox#evalCatalog.x86_64-darwin.stable.caddy flake:nixpkgs-flox#evalCatalog.x86_64-darwin.stable.procps flake:nixpkgs-flox#evalCatalog.x86_64-darwin.stable.curl flake:nixpkgs-flox#evalCatalog.x86_64-darwin.stable.jq
+```
+
+Looks like `flox-examples.demo-dnd-server` install failed. The rest was fine.
+```bash
+$ flox install -e managed-env caddy procps curl jq
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+Installed 'caddy', 'procps', 'curl', 'jq' package(s) into 'managed-env' environment.
+```
+
+Revisiting `flox-examples.demo-dnd-server` with the `--show-trace` for more info as suggested gave an error.
+
+```bash
+$ flox install -e managed-env flox-examples.demo-dnd-server --show-trace
+ERROR: No such flag: `--show-trace`, did you mean `--system`?
+
+    install a package into an environment
+
+    Usage: [-s SYSTEM] [-e ENV] <PACKAGES>...
+
+    Available options:
+      Environment Options
+        -s, --system <SYSTEM>
+
+        -e, --environment <ENV>
+        -h, --help               Prints help information
+```
+</details>
+
+I wasn't able to get this working. I only skimmed after installing stuff into my `managed-env` and the all the functionality described made sense.
+
+Suggestions:
+- (Strong) `flox-examples.demo-dnd-server` install failed
+- (Strong) Underlying `--show-trace` from Nix is misleading since you can't use it with `flox` in an obvious way
+
 #### [Build Container Images](https://floxdev.com/docs/tutorials/build-container-images/)
+
+<details>
+
+```bash
+$ flox install hello
+warning: remote HEAD refers to nonexistent ref, unable to checkout
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+warning: input 'flox' has an override for a non-existent input 'nixpkgs-flox'
+Installed 'hello' package(s) into 'default' environment.
+
+$ flox containerize | docker load
+-bash: docker: command not found
+Building container...
+Done.
+No 'fromImage' provided
+Creating layer 1 from paths: ['/nix/store/sxwkpd5cl8nkfkr98q51b5mh4rwqqlk6-libcxxabi-11.1.0']
+
+^CException in thread Thread-1 (producer):
+Traceback (most recent call last)...
+```
+
+Ah right, I don't have `docker` accessible with my original system config gone. It would be nice to have nice provide docker/podman/etc provided.
+</details>
+
+Skimmed and made sense. This is a use case I'd want so it's nice to have a tutorial.
+
+Suggestions:
+- (Weak) Provide docker/podman/etc setup
 
 #### [Custom Packages](https://floxdev.com/docs/tutorials/custom-packages/)
 
+Skipped.
+
 #### [Publish Custom Packages](https://floxdev.com/docs/tutorials/publish-custom-packages/)
+
+Skipped.
 
 ### Integrations
 
 #### [direnv](https://floxdev.com/docs/integrations/direnv/)
+
+Skipped.
 
 ### Cookbook
 
@@ -1104,30 +1199,50 @@ Nit: Isn't plural like other sections
 
 #### [Validate Identical dev/prod Environments](https://floxdev.com/docs/cookbook/validate-identical/)
 
+Skipped.
+
 #### [Managed Environments](https://floxdev.com/docs/cookbook/managed-environments/)
+
+Skipped.
 
 #### [Language Guides: Python](https://floxdev.com/docs/cookbook/language-guides/python/)
 
-### Concepts
+Skipped.
 
-#### https://floxdev.com/docs/concepts/catalog/
-👍
+## [Uninstall flox](https://floxdev.com/docs/install-flox/#uninstall-flox)
 
-#### https://floxdev.com/docs/concepts/environments/
-👍
+Uninstalling now and reverting to my original setup. If this goes smoothly I'll try out `flox` further in the future.
 
-#### https://floxdev.com/docs/concepts/flox-plus-nix/
-👍
+```bash
+$ nix profile remove \
+    .*flox.fromCatalog \
+    --experimental-features "nix-command flakes"
+```
 
-#### https://floxdev.com/docs/concepts/generations/
-👍
+```bash
+$ cd /Users/hkailahi/.config/dotnix
+$ home-manager switch --flake .#hkailahi
+warning: Git tree '/Users/hkailahi/.config/dotnix' is dirty
+Starting Home Manager activation
+Activating checkFilesChanged
+Activating checkLaunchAgents
+Activating checkLinkTargets
+Activating writeBoundary
+Activating copyFonts
+Activating installPackages
+nix profile remove /nix/store/0ghxq6l71v5r3mrw9kcbkn642lfzgix9-home-manager-path
+removing 'home-manager-path'
+Activating linkGeneration
+Cleaning up orphan links from /Users/hkailahi
+No change so reusing latest profile generation 60
+Creating home file links in /Users/hkailahi
+Activating onFilesChange
+Activating setupLaunchAgents
 
-#### https://floxdev.com/docs/concepts/package-arguments/
-👍
+$ bat --version
+bat 0.23.0
+$ nix profile list
+0 - - /nix/store/0ghxq6l71v5r3mrw9kcbkn642lfzgix9-home-manager-path
+```
 
-#### https://floxdev.com/docs/concepts/stabilities/
-👍
-
-## [Uninstall flox](https://floxdev.com/docs/install-flox/)
-
-Uninstalling now.
+Sweet! That was easy.
