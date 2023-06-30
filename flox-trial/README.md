@@ -2,8 +2,9 @@
 
 
 - [Flox - Experience Report - 6/23](#flox---experience-report---623)
-  - [Background](#background)
+  - [Main Takeaways and Feedback](#main-takeaways-and-feedback)
   - [Experience Report](#experience-report)
+    - [Background](#background)
     - [Begin](#begin)
     - [Install flox](#install-flox)
     - [flox in 5 minutes](#flox-in-5-minutes)
@@ -27,9 +28,22 @@
       - [https://floxdev.com/docs/concepts/package-arguments/](#httpsfloxdevcomdocsconceptspackage-arguments)
       - [https://floxdev.com/docs/concepts/stabilities/](#httpsfloxdevcomdocsconceptsstabilities)
   - [Uninstall flox](#uninstall-flox)
-  - [Main Takeaways and Feedback](#main-takeaways-and-feedback)
 
-## Background
+## Main Takeaways and Feedback
+
+I'd feel comfortable recommending `flox` to friends looking to get into Nix. While I'd have to evaluate it further before recommending it be used on one of my teams or for professionals, I'm be willing to do so. I'm already a fan of Nix, and any tool that would let me use it professionally without needing a *Nix Expert™️* on the team is compelling.
+
+Things I'd want to know:
+- How does `flox` hold up when you stray from the happy path?
+- What's the business model? Does it seem sustainable? What does the enterprise plan offer?
+
+The docs seem excellent.
+
+## Experience Report
+
+I will add suggestions and note whether I feel weakly or strongly about them.
+
+### Background
 
 I'm vaguely aware of what `flox` is. I've skimmed several blog posts on floxdev.com relating to Nix proper in the past.
 
@@ -37,9 +51,6 @@ My skill level with Nix is probably closer to beginner than intermediate. I alre
 
 I think `flox` is supposed to be some sort of package + environment manager built on Nix but beginner-friendly. I'm interested to see if it's something I could recommend to colleagues that I wouldn't recommend Nix too (or maybe for myself?).
 
-## Experience Report
-
-I will add suggestions and note whether I feel weakly or strongly about them.
 
 ### Begin
 
@@ -534,7 +545,7 @@ Activating setupLaunchAgents
 Bummer. Ok I'll try actually following the steps and doing a `nix profile install`. I'm fairly confident I can do a reinstall. Since I was managing my nix settings in `home.nix` instead of the `nix.conf`, I might need to revisit adding the substituter. Though, as mentioned above, I haven't had much luck changes to my `nix.conf` file actually getting picked up by nix for whatever reason.
 
 Suggestions:
-- (Medium) Directions make it seem like both personal profile _and_ default profile installation should be done. Is that intended? I assume not and will just do the former.
+- (Moderate) Directions make it seem like both personal profile _and_ default profile installation should be done. Is that intended? I assume not and will just do the former.
 
 <details>
 
@@ -649,7 +660,7 @@ warning: not writing modified lock file of flake 'git+file:///Users/hkailahi/scr
 Interesting. I see that I'm now inside some sort of nix shell.
 
 Suggestions:
-- (Medium) Some kind of loading indicator or "Downloading blah.." message HINT step so that I know it's making progress and don't Ctrl-C out
+- (Moderate) Some kind of loading indicator or "Downloading blah.." message HINT step so that I know it's making progress and don't Ctrl-C out
 
 Running:
 <details>
@@ -729,6 +740,352 @@ Suggestions:
 ### Tutorials
 #### [Project Environments](https://floxdev.com/docs/tutorials/projects/)
 
+Initializing sample project:
+<details>
+
+```bash
+$ mkdir example-project && cd example-project
+$ flox init --template project
+ERROR: You must be inside of a Git repository to initialize a project
+
+    To provide the best possible experience, projects must be under version control.
+    Please initialize a project in an existing repo or create one using 'git init'.
+```
+
+Slightly different than the docs which ask whether I want git repo initialized for me.
+
+```bash
+$ git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+Initialized empty Git repository in /Users/hkailahi/scratch/example-project/.git/
+$ git config --global init.defaultBranch main
+$ git init
+Reinitialized existing Git repository in /Users/hkailahi/scratch/example-project/.git/
+```
+
+```bash
+$ flox init --template project
+Found git repo: /Users/hkailahi/scratch/example-project
+> Enter package name example-project
+[INFO] [flox_rust_sdk::models::project] moved: /Users/hkailahi/scratch/example-project/shells/__PACKAGE_NAME__ -> /Users/hkailahi/scratch/example-project/shells/example-project
+Run 'flox develop' to enter the project environment.
+```
+
+```bash
+$ flox develop
+warning: not writing modified lock file of flake 'git+file:///Users/hkailahi/scratch/example-project':
+• Updated input 'flox-floxpkgs/nixpkgs/nixpkgs':
+    follows 'flox-floxpkgs/nixpkgs/nixpkgs-stable'
+  → 'github:flox/nixpkgs/7084250df3d7f9735087d3234407f3c1fc2400e3' (2023-05-22)
+GNU Make 4.4.1
+Built for x86_64-apple-darwin22.1.0
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Run make to build this project
+(nix:nix-shell-env)040bash-5.2$
+```
+</details>
+
+Using project environment:
+<details>
+
+```bash
+# within `flox develop` shell
+(nix:nix-shell-env)040bash-5.2$ flox nix search nixpkgs openssl
+* legacyPackages.x86_64-darwin.chickenPackages_5.chickenEggs.openssl (2.2.4)
+  Bindings to the OpenSSL SSL/TLS library
+trace: warning: qt5 now uses makeScopeWithSplicing which does not have "overrideScope'", use "overrideScope".
+
+* legacyPackages.x86_64-darwin.lua51Packages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.lua51Packages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.lua51Packages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.lua52Packages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.lua52Packages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.lua52Packages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.lua53Packages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.lua53Packages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.lua53Packages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.lua54Packages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.lua54Packages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.lua54Packages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.luaPackages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.luaPackages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.luaPackages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.luajitPackages.lua-resty-openssl (0.8.17-1)
+  No summary
+
+* legacyPackages.x86_64-darwin.luajitPackages.luaossl (20220711-0)
+  Most comprehensive OpenSSL module in the Lua universe.
+
+* legacyPackages.x86_64-darwin.luajitPackages.luasec (1.2.0-1)
+  A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.
+
+* legacyPackages.x86_64-darwin.ocamlPackages.lwt_ssl (1.2.0)
+  OpenSSL binding with concurrent I/O
+
+* legacyPackages.x86_64-darwin.openconnect_openssl (9.12)
+  VPN Client for Cisco's AnyConnect SSL VPN
+
+* legacyPackages.x86_64-darwin.openssl (3.0.9)
+  A cryptographic library that implements the SSL and TLS protocols
+
+* legacyPackages.x86_64-darwin.openssl_1_1 (1.1.1u)
+  A cryptographic library that implements the SSL and TLS protocols
+
+* legacyPackages.x86_64-darwin.openssl_3 (3.0.9)
+  A cryptographic library that implements the SSL and TLS protocols
+
+* legacyPackages.x86_64-darwin.openssl_3_0 (3.0.9)
+  A cryptographic library that implements the SSL and TLS protocols
+
+* legacyPackages.x86_64-darwin.openssl_legacy (3.0.9)
+  A cryptographic library that implements the SSL and TLS protocols
+
+* legacyPackages.x86_64-darwin.osslsigncode (2.5)
+  OpenSSL based Authenticode signing for PE/MSI/Java CAB files
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLAES (0.02)
+  Perl wrapper around OpenSSL's AES library
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLBignum (0.09)
+  OpenSSL's multiprecision integer arithmetic
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLGuess (0.15)
+  Guess OpenSSL include path
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLRSA (0.33)
+  RSA encoding and decoding, using the openSSL libraries
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLRandom (0.15)
+  OpenSSL/LibreSSL pseudo-random number generator access
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptOpenSSLX509 (1.914)
+  Perl extension to OpenSSL's X509 API
+
+* legacyPackages.x86_64-darwin.perl534Packages.CryptSSLeay (0.73_06)
+  OpenSSL support for LWP
+
+* legacyPackages.x86_64-darwin.perl534Packages.NetSSLeay (1.92)
+  Perl bindings for OpenSSL and LibreSSL
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLAES (0.02)
+  Perl wrapper around OpenSSL's AES library
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLBignum (0.09)
+  OpenSSL's multiprecision integer arithmetic
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLGuess (0.15)
+  Guess OpenSSL include path
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLRSA (0.33)
+  RSA encoding and decoding, using the openSSL libraries
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLRandom (0.15)
+  OpenSSL/LibreSSL pseudo-random number generator access
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptOpenSSLX509 (1.914)
+  Perl extension to OpenSSL's X509 API
+
+* legacyPackages.x86_64-darwin.perl536Packages.CryptSSLeay (0.73_06)
+  OpenSSL support for LWP
+
+* legacyPackages.x86_64-darwin.perl536Packages.NetSSLeay (1.92)
+  Perl bindings for OpenSSL and LibreSSL
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLAES (0.02)
+  Perl wrapper around OpenSSL's AES library
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLBignum (0.09)
+  OpenSSL's multiprecision integer arithmetic
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLGuess (0.15)
+  Guess OpenSSL include path
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLRSA (0.33)
+  RSA encoding and decoding, using the openSSL libraries
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLRandom (0.15)
+  OpenSSL/LibreSSL pseudo-random number generator access
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptOpenSSLX509 (1.914)
+  Perl extension to OpenSSL's X509 API
+
+* legacyPackages.x86_64-darwin.perlPackages.CryptSSLeay (0.73_06)
+  OpenSSL support for LWP
+
+* legacyPackages.x86_64-darwin.perlPackages.NetSSLeay (1.92)
+  Perl bindings for OpenSSL and LibreSSL
+
+* legacyPackages.x86_64-darwin.php81Extensions.openssl (8.1.20)
+  PHP upstream extension: openssl
+
+* legacyPackages.x86_64-darwin.php81Extensions.openssl-legacy (8.1.20)
+  PHP upstream extension: openssl-legacy
+
+* legacyPackages.x86_64-darwin.php82Extensions.openssl (8.2.7)
+  PHP upstream extension: openssl
+
+* legacyPackages.x86_64-darwin.php82Extensions.openssl-legacy (8.2.7)
+  PHP upstream extension: openssl-legacy
+
+* legacyPackages.x86_64-darwin.php83Extensions.openssl (8.3.0alpha2)
+  PHP upstream extension: openssl
+
+* legacyPackages.x86_64-darwin.php83Extensions.openssl-legacy (8.3.0alpha2)
+  PHP upstream extension: openssl-legacy
+
+* legacyPackages.x86_64-darwin.python310Packages.aioopenssl (0.6.0)
+  TLS-capable transport using OpenSSL for asyncio
+
+* legacyPackages.x86_64-darwin.python310Packages.certipy (0.1.3)
+  wrapper for pyOpenSSL
+
+* legacyPackages.x86_64-darwin.python310Packages.ndg-httpsclient (0.5.1)
+  Provide enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+
+* legacyPackages.x86_64-darwin.python310Packages.pyopenssl (23.1.1)
+  Python wrapper around the OpenSSL library
+
+* legacyPackages.x86_64-darwin.python310Packages.service-identity (21.1.0)
+  Service identity verification for pyOpenSSL
+
+* legacyPackages.x86_64-darwin.python310Packages.types-pyopenssl (23.2.0.0)
+  Typing stubs for pyopenssl
+
+* legacyPackages.x86_64-darwin.python311Packages.aioopenssl (0.6.0)
+  TLS-capable transport using OpenSSL for asyncio
+
+* legacyPackages.x86_64-darwin.python311Packages.certipy (0.1.3)
+  wrapper for pyOpenSSL
+
+* legacyPackages.x86_64-darwin.python311Packages.ndg-httpsclient (0.5.1)
+  Provide enhanced HTTPS support for httplib and urllib2 using PyOpenSSL
+
+* legacyPackages.x86_64-darwin.python311Packages.pyopenssl (23.1.1)
+  Python wrapper around the OpenSSL library
+
+* legacyPackages.x86_64-darwin.python311Packages.service-identity (21.1.0)
+  Service identity verification for pyOpenSSL
+
+* legacyPackages.x86_64-darwin.python311Packages.types-pyopenssl (23.2.0.0)
+  Typing stubs for pyopenssl
+
+* legacyPackages.x86_64-darwin.rubyPackages.openssl (3.1.0)
+
+* legacyPackages.x86_64-darwin.rubyPackages_2_7.openssl (3.1.0)
+
+* legacyPackages.x86_64-darwin.rubyPackages_3_0.openssl (3.1.0)
+
+* legacyPackages.x86_64-darwin.rubyPackages_3_1.openssl (3.1.0)
+
+* legacyPackages.x86_64-darwin.rubyPackages_3_2.openssl (3.1.0)
+
+* legacyPackages.x86_64-darwin.sgx-ssl (2.16_1.1.1l)
+  Cryptographic library for Intel SGX enclave applications based on OpenSSL
+
+* legacyPackages.x86_64-darwin.tcltls (1.7.22)
+  An OpenSSL / RSA-bsafe Tcl extension
+
+$ exit
+```
+</details>
+
+That was a lot.
+
+Adding `openssl` to `default.nix`
+
+<details>
+
+```diff
+ {
+   gnumake,
+   mkShell,
++  openssl,
+   stdenv,
+   zlib,
+ }:
+@@ -11,6 +12,7 @@
+ mkShell {
+   # Compilers and libraries go here
+   buildInputs = [
++    openssl
+     stdenv.cc
+     zlib
+   ];
+```
+
+```bash
+$ flox develop
+warning: not writing modified lock file of flake 'git+file:///Users/hkailahi/scratch/example-project':
+• Updated input 'flox-floxpkgs/nixpkgs/nixpkgs':
+    follows 'flox-floxpkgs/nixpkgs/nixpkgs-stable'
+  → 'github:flox/nixpkgs/7084250df3d7f9735087d3234407f3c1fc2400e3' (2023-05-22)
+GNU Make 4.4.1
+Built for x86_64-apple-darwin22.1.0
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Run make to build this project
+(nix:nix-shell-env)040bash-5.2$ which make
+/nix/store/illvvpvgxw8sprvksnzgilc5r4mm6g30-gnumake-4.4.1/bin/make
+```
+</details>
+
+Looks good.
+
+Suggestions:
+- (Moderate) Add `git init` to documented steps and point out why its necessary
+- (Weak) Say to rerun `flox init --template project` in failure message after `git init`
+- (Moderate) Refine query in `flox nix search` step
+- (Moderate) Pull `$ # add openssl to default.nix` out of middle of code block and say it plainly.
+- (Weak) Use `diff` format for code blocks instead of `git diff`
+- (Moderate) Motivate the tutorial by summarizing the final "Sharing the enviroment" up front.
+  - > "Clone repo, run `flox develop`, and everyone will have a matching environment!"
+
 #### [Managed Environments](https://floxdev.com/docs/tutorials/managed-environments/)
 
 #### [Build Container Images](https://floxdev.com/docs/tutorials/build-container-images/)
@@ -774,5 +1131,3 @@ Nit: Isn't plural like other sections
 ## [Uninstall flox](https://floxdev.com/docs/install-flox/)
 
 Uninstalling now.
-
-## Main Takeaways and Feedback
