@@ -7,6 +7,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flox.url = "git+ssh://git@github.com/flox/flox?ref=latest";
+    flox.inputs.flox-floxpkgs.follows = "";
   };
 
   outputs = { nixpkgs, home-manager, ... }: let
