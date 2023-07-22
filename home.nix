@@ -90,6 +90,7 @@
     tldr
     tree
     visidata
+    youtube-dl
 
     # Nix-specific Tools
     haskellPackages.nix-derivation
