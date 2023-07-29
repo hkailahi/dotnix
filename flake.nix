@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs/release-23.05";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    devenv.url = "github:cachix/devenv";
   };
 
   outputs = { nixpkgs, home-manager, ... }: let

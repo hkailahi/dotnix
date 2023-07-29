@@ -25,8 +25,12 @@
     "extra-trusted-substituters" = [
        "https://cache.nixos.org/"
        "https://nix-community.cachix.org"
+       "https://devenv.cachix.org"
     ];
-    "extra-trusted-public-keys" = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
+    "extra-trusted-public-keys" = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+    ];
   };
 
   nix.registry = {
@@ -75,11 +79,14 @@
 
     # Languages
     python311
-    haskell.compiler.ghc96
+    haskell.compiler.ghc94 # ghc-9.4.5 (lts-21.3)
 
     # Infra
     podman
     qemu
+
+    # Data Store
+    sqlite
 
     # Shell
     bashInteractive
@@ -93,6 +100,7 @@
     youtube-dl
 
     # Nix-specific Tools
+    cachix
     haskellPackages.nix-derivation
     nil # https://github.com/oxalica/nil#readme
     nix-direnv
@@ -233,7 +241,7 @@
       # Nix
       bbenoist.nix
       jnoortheen.nix-ide
-      arrterian.nix-env-selector
+      # arrterian.nix-env-selector
       # Haskell
       haskell.haskell
       # Python
@@ -251,11 +259,11 @@
 
     ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {
-        # MDX Preview
-        name = "vscode-mdx-preview";
-        publisher = "xyc";
-        version = "0.2.2";
-        sha256 = "sha256-76WLElIBxh7bS9H43HegZVOHNOLsPnaOv018X41JvCc=";
+        # Automatically load environments with direnv
+       name = "direnv";
+       publisher = "mkhl";
+       version = "0.14.0";
+       sha256 = "sha256-T+bt6ku+zkqzP1gXNLcpjtFAevDRiSKnZaE7sM4pUOs=";
       }
       {
         # Mypy
@@ -286,18 +294,18 @@
         sha256 = "sha256-rn/ZR5OgDaxAGB+Q0FJ3Vx1VIAVosoZq1A5z+hptiI0=";
       }
       {
-        # Language support for MDX
-        name = "vscode-mdx";
-        publisher = "unifiedjs";
-        version = "1.3.0";
-        sha256 = "sha256-TfqSU9V5vG7GwxEihUdEGC19VFHEUjlrTg+XXHdOYn4=";
-      }
-      {
         # Documentation with Zeal (linux kapeli/Dash.app alternetive)
         name = "vscode-dash"; # configure in vscode's settings.json through nix
         publisher = "deerawan";
         version = "2.4.0";
         sha256 = "sha256-Yqn59ppNWQRMWGYVLLWofogds+4t/WRRtSSfomPWQy4=";
+      }
+      {
+        # Language support for MDX
+        name = "vscode-mdx";
+        publisher = "unifiedjs";
+        version = "1.3.0";
+        sha256 = "sha256-TfqSU9V5vG7GwxEihUdEGC19VFHEUjlrTg+XXHdOYn4=";
       }
     ];
   };
