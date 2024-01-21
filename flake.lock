@@ -8,11 +8,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1690021633,
-        "narHash": "sha256-6C6ASG6E0GaXU2THdcNy4SZgQDHE/QC0suh40KXUaWU=",
+        "lastModified": 1698243190,
+        "narHash": "sha256-n+SbyNQRhUcaZoU00d+7wi17HJpw/kAUrXOL4zRcqE8=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "def76d0ba0d3743bdfa3a8fdb3903e0928b3c6f0",
+        "rev": "86f476f7edb86159fd20764489ab4e4df6edb4b6",
         "type": "github"
       },
       "original": {
@@ -84,16 +84,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1687871164,
-        "narHash": "sha256-bBFlPthuYX322xOlpJvkjUBz0C+MOBjZdDOOJJ+G2jU=",
+        "lastModified": 1705659542,
+        "narHash": "sha256-WA3xVfAk1AYmFdwghT7mt/erYpsU6JPu9mdTEP/e9HQ=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "07c347bb50994691d7b0095f45ebd8838cf6bc38",
+        "rev": "10cd9c53115061aa6a0a90aad0b0dde6a999cdb9",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "release-23.05",
+        "ref": "release-23.11",
         "repo": "home-manager",
         "type": "github"
       }
@@ -188,16 +188,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1690022785,
-        "narHash": "sha256-WV3Rg6WcP3UErddn/+Kw3BTsc8kB9F4Y5sv7I/N5q4o=",
+        "lastModified": 1705868826,
+        "narHash": "sha256-1fulBJoQe90sjwUaK5i9bZiPsV4qkMBkT7XNrP91G7s=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0ee595490f5b1d181cccc17928aa250faf4b91c1",
+        "rev": "712e11d29492dbb0082eb2734a84cb02f85a3807",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "release-23.05",
+        "ref": "release-23.11",
         "type": "indirect"
       }
     },
