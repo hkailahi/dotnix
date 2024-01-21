@@ -23,6 +23,7 @@ Sat Jun 10 21:15:00 PDT 2023
     - [Updating the System Configuration](#updating-the-system-configuration)
   - [Learn and Do](#learn-and-do)
     - [How I Started](#how-i-started)
+  - [Resources](#resources)
 
 ## Learn
 
@@ -160,3 +161,8 @@ Per https://nix-community.github.io/home-manager/index.html#ch-nix-flakes
 >
 > You can also pass flake-related options such as --recreate-lock-file or --update-input [input] to home-manager when building/switching, and these options will be forwarded to nix build. See the NixOS Wiki page for detail.
 
+
+## Resources
+
+Declarative macOS Configuration - Using `nix-darwin` And `home-manager`: https://xyno.space/post/nix-darwin-introduction
+Setting up Nix on macOS: https://davi.sh/til/nix/nix-macos-setup/
