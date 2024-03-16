@@ -1,48 +1,5 @@
 { pkgs, lib, config, ... }:
 {
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    config.nix.package # Per https://discourse.nixos.org/t/how-to-upgrade-nix-on-macos-with-home-manager/25147/4
-
-    # Programming Languages/Environments
-    python311
-    haskell.compiler.ghc94 # ghc-9.4.5 (lts-21.3)
-    nodejs_21
-
-    ## Language-Specific Package Managers
-    nodePackages.pnpm
-
-    # Infra
-    podman
-    qemu
-
-    # Data Store
-    sqlite
-
-    # Shell
-    bashInteractive
-
-    # CLI Programs
-    bat
-    delta
-    tldr
-    tree
-    visidata
-    youtube-dl
-
-    # Nix-specific Tools
-    cachix
-    haskellPackages.nix-derivation
-    nil # https://github.com/oxalica/nil#readme
-    nix-direnv
-    nix-info
-    nix-tree
-    nixpkgs-fmt
-    sbomnix
-    vulnix
-  ];
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nixVersions.nix_2_19; # Per https://discourse.nixos.org/t/how-to-upgrade-nix-on-macos-with-home-manager/25147/4
@@ -86,5 +43,166 @@
   users.users.hkailahi = {
     name = "hkailahi";
     home = "/Users/hkailahi";
+  };
+
+  # List packages installed in system profile. To search by name, run:
+  # $ nix-env -qaP | grep wget
+  environment.systemPackages = with pkgs; [
+    config.nix.package # Per https://discourse.nixos.org/t/how-to-upgrade-nix-on-macos-with-home-manager/25147/4
+
+    # Programming Languages and Environments
+    python311
+
+    haskell.compiler.ghc94 # ghc-9.4.5 (lts-21.3)
+
+    nodejs_21
+    nodePackages.pnpm
+
+    elixir_1_16
+
+    # Infra
+    # docker_20_10
+    # docker-client
+    # docker-compose
+    podman
+    qemu
+
+    # Data Store
+    sqlite
+
+    # Shell
+    bashInteractive
+
+    # CLI Programs
+    bat         # modern `cat`
+    delta       # for diff-ing
+    ffmpeg_5    # video conversion tool
+    procs       # modern `ps`
+    tldr        # quick usage guide when you don't need the full manpages
+    tree        # visualize directory tree
+    visidata    # Excel for CLI
+    youtube-dl  # download youtube videos
+
+    # Nix-specific Tools
+    cachix
+    haskellPackages.nix-derivation
+    nil # https://github.com/oxalica/nil#readme
+    nix-direnv
+    nix-info
+    nix-tree
+    nixpkgs-fmt
+    sbomnix
+    vulnix
+
+    # GUI Apps
+    qbittorrent
+  ];
+
+  ##### Nix-Darwin Packages + Services + Options ###################################################
+
+  ##### ##### Postgresql Setup ##### #####
+  # TODO: Use alternative??? -> https://rossabaker.com/configs/postgresql/
+
+  # From https://github.com/LnL7/nix-darwin/issues/339#issuecomment-1765304524
+  system.activationScripts.preActivation = {
+    enable = true;
+    text = ''
+      if [ ! -d "/var/lib/postgresql/" ]; then
+        echo "creating PostgreSQL data directory..."
+        sudo mkdir -m 750 -p /var/lib/postgresql/
+        chown -R hkailahi:staff /var/lib/postgresql/
+      fi
+    '';
+  };
+
+  services.postgresql = {
+    enable = true;
+    initdbArgs = [
+      "-U hkailahi"
+      "--pgdata=/var/lib/postgresql/16"
+      "--encoding=UTF8"
+      "--auth=trust"
+      # "--no-locale"
+    ];
+    package = pkgs.postgresql_16;
+    settings = {
+      # Enable logical replication for use with Electric-SQL - https://electric-sql.com/docs/usage/installation/postgres#homebrew
+      "wal_level" = "logical";
+    };
+  };
+
+  launchd.user.agents.postgresql.serviceConfig = {
+    StandardErrorPath = "/tmp/postgres.error.log";
+    StandardOutPath = "/tmp/postgres.log";
+  };
+  # $ psql
+  # psql (16.1)
+  # Type "help" for help.
+  #
+  # hkailahi=# \password
+  # Enter new password for user "hkailahi": pass
+  # Enter it again: pass
+
+  # services.electric-sql = {
+  #   enable = true;
+  #   settings = {
+  #       "DATABASE_URL" = "postgresql://localhost:5432";
+  #       "AUTH_JWT_ALG" = "";
+  #       "LOGICAL_PUBLISHER_HOST" = "hkailahi";
+  #       "PG_PROXY_PASSWORD" = "";
+  #
+  #       DATABASE_URL="postgresql://localhost:5432"
+  #       AUTH_JWT_ALG=""
+  #       LOGICAL_PUBLISHER_HOST="hkailahi"
+  #       PG_PROXY_PASSWORD=""
+  #   };
+  # };
+
+  homebrew = {
+    enable = true; # NOTE: Doesn't install homebrew. See https://daiderd.com/nix-darwin/manual/index.html#opt-homebrew.enable
+    brews = [
+      /*
+        ########## Examples ########################################################################
+        # `brew install`
+        "imagemagick"
+
+        # `brew install --with-rmtp`, `brew services restart` on version changes
+        {
+          name = "denji/nginx/nginx-full";
+          args = [ "with-rmtp" ];
+          restart_service = "changed";
+        }
+
+        # `brew install`, always `brew services restart`, `brew link`, `brew unlink mysql` (if it is installed)
+        {
+          name = "mysql@5.6";
+          restart_service = true;
+          link = true;
+          conflicts_with = [ "mysql" ];
+        }
+      */
+    ];
+    casks = [
+      # https://stackoverflow.com/a/44719239 https://stackoverflow.com/a/49719638
+      "docker" # https://formulae.brew.sh/cask/docker
+
+      /*
+        ########## Examples ########################################################################
+        # `brew install --cask`
+        "google-chrome"
+
+        # `brew install --cask --appdir=~/my-apps/Applications`
+        {
+          name = "firefox";
+          args = { appdir = "~/my-apps/Applications"; };
+        }
+
+        # always upgrade auto-updated or unversioned cask to latest version even if already installed
+        {
+          name = "opera";
+          greedy = true;
+        }
+      */
+    ];
   };
 }
